@@ -1,70 +1,37 @@
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
 public class BalleScript : MonoBehaviour
 {
     [SerializeField] int ballSpeed;
 
-    private bool firstShoot = true;
+
 
     RaycastHit hit;
 
-   public Vector2 currentDirection;
+    public Vector3 currentDirection;
 
-    // Update is called once per frame
+
+    private void Start()
+    {
+        currentDirection = Vector3.down;
+    }
+
     void Update()
     {
-        FirstMove();
+
         Move();
     }
 
-    private void FirstMove()
-    {
-        if (firstShoot)
-        {
-            transform.Translate(Vector3.down * Time.deltaTime * ballSpeed);
-        }
-        Move();
-    }
 
     private void Move()
     {
-        if (!firstShoot)
-        {
-            transform.Translate(Vector3.right * Time.deltaTime * ballSpeed);
-        }
-        
+
+        transform.Translate(currentDirection * Time.deltaTime * ballSpeed);
+
+
     }
 
-   private void calculateTrajectoir()
-    {
-        Vector3 origin = transform.position;
-        Vector3 dir = transform.right;
 
-        Ray ray = new Ray(origin, dir);
-/*        Gizmos.DrawLine(origin, origin + dir);*/
-        //tirer un raycast faire le produit scalaire entre les obstacles
-        for (int i = 0; i < 200; i++)
-        {
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                /*Gizmos.DrawLine(origin, hit.point);
-                Gizmos.DrawSphere(hit.point, 0.1f);*/
-                Vector3 normale = hit.normal;
-
-                Vector3 reflet = Reflect(ray.direction, normale);
-                /*Gizmos.DrawLine(hit.point, (Vector2)hit.point + reflet * 4);*/
-                origin = hit.point;
-                dir = reflet;
-                ray = new Ray(origin, dir);
-                transform.rotation = Quaternion.Euler(dir);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
 
     Vector2 Reflect(Vector2 direction, Vector2 normale)
     {
@@ -72,13 +39,31 @@ public class BalleScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         if (collision.CompareTag("Player"))
         {
-            firstShoot = false;
-            
+
+            float x = transform.position.x - collision.transform.position.x;
+            float length = collision.bounds.size.x;
+
+            float directionX = x / length;
+
+            currentDirection = new Vector2(directionX, 1f).normalized;
         }
-        calculateTrajectoir();
-    }   
+        else if (collision.CompareTag("Block"))
+        {
+            Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
+            currentDirection = Vector2.Reflect(currentDirection, normal);
+            //TODO : implémenter l'augmentation de l'argent
+            collision.gameObject.SetActive(false);
+        }
+        else
+        {
+            Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
+            currentDirection = Vector2.Reflect(currentDirection, normal);
+        }
+
+    }
 
 
 
