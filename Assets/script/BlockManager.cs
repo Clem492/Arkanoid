@@ -3,23 +3,36 @@ using UnityEngine;
 
 public class BlockManager : MonoBehaviour
 {
-
+    public static BlockManager instance;
     public int rows = 5;
     public int cols = 11;
     public float spacing = 1.5f;
 
     public Vector2 startPosition = new Vector2(-6.5f, 7.5f);
-    public GameObject blocPrefab;
+    public GameObject[] blocPrefab;
     private int blockRemaining;
 
     private GameObject[,] tabBlock;
 
-    Dictionary<string, blockData.BlockType> blockType;
+    public List<blockData> blockDatas;
+
+
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         SpawnBlock();
+        int spawningProb = Random.Range(0, 4);
+        Debug.Log((spawningProb * 100)/60);
     }
 
     // Update is called once per frame
@@ -37,7 +50,33 @@ public class BlockManager : MonoBehaviour
 
             for (int col = 0; col < cols; col++)
             {
-                tabBlock[row, col] = Instantiate(blocPrefab);
+                int spawningProb = Random.Range(0, 100);
+                if (spawningProb >= 50)
+                {
+                    //instancer le basique
+                    tabBlock[row, col] = Instantiate(blocPrefab[0]);
+                }
+                else if (spawningProb >= 20)
+                {
+                    //instantier l'élémentaire
+                    tabBlock[row, col] = Instantiate(blocPrefab[1]);
+                }
+                else if (spawningProb >= 10)
+                {
+                    //instantierle Rare
+                    tabBlock[row, col] = Instantiate(blocPrefab[2]);
+                }
+                else if (spawningProb >= 3)
+                {
+                    //instantier le Legendaire
+                    tabBlock[row, col] = Instantiate(blocPrefab[3]);
+                }
+                else if (spawningProb >= 0)
+                {
+                    //instantier le Mythique
+                    tabBlock[row, col] = Instantiate(blocPrefab[4]);
+                }
+
 
                 float xPos = startPosition.x + (col * spacing);
                 float yPos = startPosition.y - (row * spacing * 0.6f);
@@ -49,19 +88,64 @@ public class BlockManager : MonoBehaviour
         }
     }
 
-    private void ReActiveBlock()
+
+    public GameObject GetBlockTouched(GameObject collision)
     {
-        for (int row = 0; row < rows; row++)
+        if (collision.name.Contains("Basic"))
         {
-
-            for (int col = 0; col < cols; col++)
-            {
-                tabBlock[row, col].SetActive(true);
-            }
+            return collision.gameObject;
         }
-
-
+        else if (collision.name.Contains("Elementaire"))
+        {
+            return collision.gameObject;
+        }
+        else if (collision.name.Contains("Rare"))
+        {
+            return collision.gameObject;
+        }
+        else if (collision.name.Contains("Legendaire"))
+        {
+            return collision.gameObject;
+        }
+        else if (collision.name.Contains("Mythique"))
+        {
+            return collision.gameObject;
+        }
+        else
+        {
+            Debug.LogError("Aucun Bloc trouver");
+            return null;
+        }
     }
 
+    public blockData.BlockType GetBlockType(GameObject block)
+    {
+
+        if (block.name.Contains("Basic"))
+        {
+          return blockDatas[0].blockTypes[0];
+        }
+        else if (block.name.Contains("Elementaire"))
+        {
+            return blockDatas[0].blockTypes[1];
+        }
+        else if (block.name.Contains("Rare"))
+        {
+            return blockDatas[0].blockTypes[2];
+        }
+        else if (block.name.Contains("Legendaire"))
+        {
+            return blockDatas[0].blockTypes[3];
+        }
+        else if (block.name.Contains("Mythique"))
+        {
+            return blockDatas[0].blockTypes[4];
+        }
+        else
+        {
+            Debug.LogError("Aucun Bloc trouver");
+            return null;
+        }
+    }
 
 }

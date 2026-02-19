@@ -9,6 +9,7 @@ public class blockData : ScriptableObject
     {
         public string name;
         public int MoneyValue;
+        public int Dommage;
         public Color color;
         public GameObject prefab;
     }

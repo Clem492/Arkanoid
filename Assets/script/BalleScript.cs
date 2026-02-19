@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BalleScript : MonoBehaviour
@@ -10,10 +11,12 @@ public class BalleScript : MonoBehaviour
 
     public Vector3 currentDirection;
 
-
+    private GameObject blockSave;
+    
     private void Start()
     {
         currentDirection = Vector3.down;
+        
     }
 
     void Update()
@@ -33,13 +36,10 @@ public class BalleScript : MonoBehaviour
 
 
 
-    Vector2 Reflect(Vector2 direction, Vector2 normale)
-    {
-        return direction - 2 * Vector2.Dot(normale, direction) * normale;
-    }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
+        
         if (collision.CompareTag("Player"))
         {
 
@@ -52,10 +52,20 @@ public class BalleScript : MonoBehaviour
         }
         else if (collision.CompareTag("Block"))
         {
+            blockSave = BlockManager.instance.GetBlockTouched(collision.gameObject);
             Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
-            //TODO : implémenter l'augmentation de l'argent
+            GameManager.instance.AddMoney(collision.gameObject);
             collision.gameObject.SetActive(false);
+        }
+        else if (collision.CompareTag("lifeBlock"))
+        {
+            if (blockSave != null)
+            {
+                GameManager.instance.LooseLife(blockSave);
+            }
+            Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
+            currentDirection = Vector2.Reflect(currentDirection, normal);
         }
         else
         {

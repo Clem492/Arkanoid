@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Balle
   - Block
+  - lifeBlock
   layers:
   - Default
   - TransparentFX
