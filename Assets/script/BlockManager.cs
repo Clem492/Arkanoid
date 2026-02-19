@@ -32,7 +32,7 @@ public class BlockManager : MonoBehaviour
         }
         SpawnBlock();
         int spawningProb = Random.Range(0, 4);
-        Debug.Log((spawningProb * 100)/60);
+
     }
 
     // Update is called once per frame
@@ -123,7 +123,7 @@ public class BlockManager : MonoBehaviour
 
         if (block.name.Contains("Basic"))
         {
-          return blockDatas[0].blockTypes[0];
+            return blockDatas[0].blockTypes[0];
         }
         else if (block.name.Contains("Elementaire"))
         {

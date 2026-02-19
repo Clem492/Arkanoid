@@ -10,6 +10,7 @@ public class blockData : ScriptableObject
         public string name;
         public int MoneyValue;
         public int Dommage;
+        public int rebondSpeed;
         public Color color;
         public GameObject prefab;
     }
