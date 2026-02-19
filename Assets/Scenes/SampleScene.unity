@@ -841,6 +841,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &577621373 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5389080401283075363, guid: 81ce421669de6264098023fc72df9719, type: 3}
+  m_PrefabInstance: {fileID: 1594672037}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &600258197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,6 +1649,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7208217763424737202, guid: 81ce421669de6264098023fc72df9719, type: 3}
+      propertyPath: ballColor
+      value: 
+      objectReference: {fileID: 577621373}
     - target: {fileID: 8700149922178059396, guid: 81ce421669de6264098023fc72df9719, type: 3}
       propertyPath: m_Name
       value: Ball

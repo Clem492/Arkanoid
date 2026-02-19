@@ -5,7 +5,7 @@ public class BalleScript : MonoBehaviour
 {
     [SerializeField] int ballSpeed;
 
-
+    public SpriteRenderer ballColor;
 
     RaycastHit hit;
 
@@ -42,7 +42,11 @@ public class BalleScript : MonoBehaviour
         
         if (collision.CompareTag("Player"))
         {
-
+            if (blockSave == null)
+            {
+                ballColor.color = Color.white;
+            }
+           
             float x = transform.position.x - collision.transform.position.x;
             float length = collision.bounds.size.x;
 
@@ -56,19 +60,27 @@ public class BalleScript : MonoBehaviour
             Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
             GameManager.instance.AddMoney(collision.gameObject);
+            ballColor.color = collision.GetComponent<SpriteRenderer>().color;
             collision.gameObject.SetActive(false);
         }
         else if (collision.CompareTag("lifeBlock"))
         {
+            ballColor.color = Color.white;
             if (blockSave != null)
             {
                 GameManager.instance.LooseLife(blockSave);
+                blockSave = null;
             }
             Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
         else
         {
+            if (blockSave == null)
+            {
+                ballColor.color = Color.white;
+            }
+
             Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
