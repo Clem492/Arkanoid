@@ -92,6 +92,18 @@ public class BalleScript : MonoBehaviour
             Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
+        else if (collision.gameObject.CompareTag("barriere"))
+        {
+            blockSave = null;
+            ballColor.color = Color.white;
+            ballSpeed = 3;
+            float x = transform.position.x - collision.transform.position.x;
+            float length = collision.bounds.size.x;
+
+            float directionX = x / length;
+
+            currentDirection = new Vector2(directionX, 1f).normalized;
+        }
         else
         {
             if (blockSave == null)

@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        textMoney.text = money.ToString();
+        ShowMoney();
         textLife.text = life.ToString() + "/500";
     }
 
@@ -66,13 +66,18 @@ public class GameManager : MonoBehaviour
         if (blockType != null)
         {
             money += blockType.MoneyValue;
-            textMoney.text = money.ToString();
+            ShowMoney();
         }
         else
         {
             Debug.Log("aucun type de bloc trouver");
         }
 
+    }
+
+    public void ShowMoney()
+    {
+        textMoney.text = money.ToString();
     }
 
     //TODO : implémenter le game over
