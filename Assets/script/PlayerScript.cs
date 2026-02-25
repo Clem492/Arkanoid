@@ -28,10 +28,10 @@ public class PlayerScript : MonoBehaviour
     [Range(0f, 1f)]
     public float boundaryPercentage = 0.8f;
 
-    
-   
 
-    
+
+
+
 
     private enum PlayerState
     {
@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour
     #region Initialize Region
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+
 
         rb = GetComponent<Rigidbody2D>();
 
@@ -77,7 +77,7 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-      
+
 
         if (Mathf.Approximately(targetSpeed - currentSpeed, 0) && currentState != PlayerState.Idle)
         {
@@ -181,7 +181,7 @@ public class PlayerScript : MonoBehaviour
 
     #region CalculateBoundary & Debug Gizmos
 
-  
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

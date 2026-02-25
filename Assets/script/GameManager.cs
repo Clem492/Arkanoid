@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int life = 500;
+    private int maxLife = 500;
     public int money = 0;
 
     [SerializeField] private TextMeshProUGUI textMoney;
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LooseLife(GameObject collision)
+    public void LooseLifeSave(GameObject collision)
     {
         blockData.BlockType blockType = BlockManager.instance.GetBlockType(collision);
         if (blockType != null)
@@ -58,6 +59,22 @@ public class GameManager : MonoBehaviour
             Debug.Log("aucun type de bloc trouver");
         }
 
+    }
+
+    public void LooseLife()
+    {
+        life -= 20;
+        textLife.text = life.ToString() + "/500";
+    }
+
+    public void AddLife()
+    {
+        life += 40;
+        if (life > maxLife)
+        {
+            life = maxLife;
+        }
+        textLife.text = life.ToString() + "/500";
     }
 
     public void AddMoney(GameObject collision)
@@ -74,6 +91,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
 
     public void ShowMoney()
     {

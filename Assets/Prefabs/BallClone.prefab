@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 1224908110817618972}
   - component: {fileID: 5389080401283075363}
   - component: {fileID: 107186176432573979}
-  - component: {fileID: 7208217763424737202}
   - component: {fileID: 7766659559781099356}
+  - component: {fileID: 2927087092060079409}
   m_Layer: 0
-  m_Name: Ball
+  m_Name: BallClone
   m_TagString: Balle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,21 +117,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7208217763424737202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8700149922178059396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b53ff2beaf31474186c7b8b492c4422, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballSpeed: 3
-  ballColor: {fileID: 5389080401283075363}
-  currentDirection: {x: 0, y: 0, z: 0}
 --- !u!58 &7766659559781099356
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -168,3 +153,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &2927087092060079409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700149922178059396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c4d331f5cdfc04194000e9ec8970ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballSpeed: 0
+  ballColor: {fileID: 0}
+  currentDirection: {x: 0, y: 0, z: 0}
+  timeToDeath: 30

@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public class BarriereManager : MonoBehaviour
@@ -18,7 +17,7 @@ public class BarriereManager : MonoBehaviour
     public Vector2 maxeScale;
 
     //argent requis
-    public int moneyRequiredToSpawn = 400;
+    public int moneyRequiredToSpawn;
 
 
     void Start()
@@ -39,7 +38,7 @@ public class BarriereManager : MonoBehaviour
         if (GameManager.instance.money >= moneyRequiredToSpawn)
         {
             SpawnBarriere();
-           
+
         }
 
     }
@@ -70,7 +69,7 @@ public class BarriereManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             Debug.DrawRay(ray.origin, ray.direction);
-            if (Physics.Raycast(ray, out hit) && ray.origin.y <0)
+            if (Physics.Raycast(ray, out hit) && ray.origin.y < 0)
             {
                 if (hit.transform.CompareTag("floor"))
                 {

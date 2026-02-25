@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BalleScript : MonoBehaviour
+public class BalleCloneScript : MonoBehaviour
 {
     [SerializeField] int ballSpeed;
 
@@ -10,9 +10,7 @@ public class BalleScript : MonoBehaviour
     public Vector3 currentDirection;
 
     private GameObject blockSave;
-
-
-
+    [SerializeField] float timeToDeath;
 
     private void Awake()
     {
@@ -31,8 +29,12 @@ public class BalleScript : MonoBehaviour
     {
 
         Move();
-
-
+        Debug.Log(blockSave);
+        timeToDeath -= Time.deltaTime;
+        if (timeToDeath < 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
 
@@ -130,7 +132,4 @@ public class BalleScript : MonoBehaviour
         }
 
     }
-
-
-
 }

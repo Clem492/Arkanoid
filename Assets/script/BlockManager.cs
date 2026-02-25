@@ -89,34 +89,7 @@ public class BlockManager : MonoBehaviour
     }
 
 
-    public GameObject GetBlockTouched(GameObject collision)
-    {
-        if (collision.name.Contains("Basic"))
-        {
-            return collision.gameObject;
-        }
-        else if (collision.name.Contains("Elementaire"))
-        {
-            return collision.gameObject;
-        }
-        else if (collision.name.Contains("Rare"))
-        {
-            return collision.gameObject;
-        }
-        else if (collision.name.Contains("Legendaire"))
-        {
-            return collision.gameObject;
-        }
-        else if (collision.name.Contains("Mythique"))
-        {
-            return collision.gameObject;
-        }
-        else
-        {
-            Debug.LogError("Aucun Bloc trouver");
-            return null;
-        }
-    }
+
 
     public blockData.BlockType GetBlockType(GameObject block)
     {
