@@ -15,7 +15,11 @@ public class BlockManager : MonoBehaviour
     private GameObject[,] tabBlock;
 
     public List<blockData> blockDatas;
-
+    private int spawningBasic = 50;
+    private int spawningElementaire = 20;
+    private int spawningRare = 10;
+    private int spawningLegendaire = 3;
+    private int spawningMythique = 0;
 
 
 
@@ -38,7 +42,7 @@ public class BlockManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        WhatLevel();
     }
 
 
@@ -50,28 +54,28 @@ public class BlockManager : MonoBehaviour
 
             for (int col = 0; col < cols; col++)
             {
-                int spawningProb = Random.Range(0, 100);
-                if (spawningProb >= 50)
+               int spawningProb  = Random.Range(0, 100);
+                if (spawningProb >= spawningBasic)
                 {
                     //instancer le basique
                     tabBlock[row, col] = Instantiate(blocPrefab[0]);
                 }
-                else if (spawningProb >= 20)
+                else if (spawningProb >= spawningElementaire)
                 {
                     //instantier l'élémentaire
                     tabBlock[row, col] = Instantiate(blocPrefab[1]);
                 }
-                else if (spawningProb >= 10)
+                else if (spawningProb >= spawningRare)
                 {
                     //instantierle Rare
                     tabBlock[row, col] = Instantiate(blocPrefab[2]);
                 }
-                else if (spawningProb >= 3)
+                else if (spawningProb >= spawningLegendaire)
                 {
                     //instantier le Legendaire
                     tabBlock[row, col] = Instantiate(blocPrefab[3]);
                 }
-                else if (spawningProb >= 0)
+                else if (spawningProb >= spawningMythique)
                 {
                     //instantier le Mythique
                     tabBlock[row, col] = Instantiate(blocPrefab[4]);
@@ -90,6 +94,66 @@ public class BlockManager : MonoBehaviour
     }
 
 
+
+    private void WhatLevel()
+    {
+        if (GameManager.instance.Level > 1 && GameManager.instance.Level <3)
+        {
+            spawningBasic = 70;
+            spawningElementaire = 30;
+            spawningRare = 15;
+            spawningLegendaire = 5;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 3 && GameManager.instance.Level <5)
+        {
+            spawningBasic = 90;
+            spawningElementaire = 50;
+            spawningRare = 25;
+            spawningLegendaire = 10;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 5 && GameManager.instance.Level <7)
+        {
+            spawningBasic =100;
+            spawningElementaire = 70;
+            spawningRare = 30;
+            spawningLegendaire = 10;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 7 && GameManager.instance.Level <9)
+        {
+            spawningBasic = 100;
+            spawningElementaire = 90;
+            spawningRare = 50;
+            spawningLegendaire = 20;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 9 && GameManager.instance.Level <11)
+        {
+            spawningBasic = 100;
+            spawningElementaire = 100;
+            spawningRare = 85;
+            spawningLegendaire = 40;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 11 && GameManager.instance.Level <13)
+        {
+            spawningBasic = 100;
+            spawningElementaire = 100;
+            spawningRare = 100;
+            spawningLegendaire = 70;
+            spawningMythique = 0;
+        }
+        if (GameManager.instance.Level >= 13 && GameManager.instance.Level < 15)
+        {
+            spawningBasic = 100;
+            spawningElementaire = 100;
+            spawningRare = 100;
+            spawningLegendaire = 100;
+            spawningMythique = 0;
+        }
+    }
 
 
     public blockData.BlockType GetBlockType(GameObject block)

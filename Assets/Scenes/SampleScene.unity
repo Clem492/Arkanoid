@@ -1915,6 +1915,7 @@ MonoBehaviour:
   balle: {fileID: 1948324505}
   newLevel: 0
   isPaused: 0
+  subDivisionPower: {fileID: 1619272467}
 --- !u!114 &1619272465
 MonoBehaviour:
   m_ObjectHideFlags: 0

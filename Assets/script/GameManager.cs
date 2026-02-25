@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public bool newLevel = false;
     public bool isPaused = false;
 
+    [SerializeField] SubDivisionPower subDivisionPower;
+
     void Start()
     {
         if (instance == null)
@@ -110,7 +112,7 @@ public class GameManager : MonoBehaviour
         if (BlockManager.instance.blockRemaining <= 0 && !newLevel)
         {
             newLevel = true;
-            money = 0;
+           /* money = 0;*/
             IncreaseLevel();
             StartCoroutine(NewLevel());
             return;
@@ -137,6 +139,8 @@ public class GameManager : MonoBehaviour
         BalleToDestroy = GameObject.FindGameObjectsWithTag("BalleClone");
         foreach(GameObject go in BalleToDestroy)
         {
+            subDivisionPower.allBalle.Clear();
+            subDivisionPower.allBalle.Add(GameObject.FindWithTag("Balle"));
             Destroy(go);
         }
         //faire spawn les nouvelle brique 
@@ -150,6 +154,8 @@ public class GameManager : MonoBehaviour
     {
         textMoney.text = money.ToString();
     }
+
+
 
     //TODO : implémenter le game over
     //TODO ! corriger bug de la balle en dehors de la map
