@@ -11,9 +11,11 @@ public class BalleCloneScript : MonoBehaviour
 
     private GameObject blockSave;
     [SerializeField] float timeToDeath;
+    private SubDivisionPower subDivisionPower;
 
     private void Awake()
     {
+        subDivisionPower = GameObject.FindWithTag("GameManager").GetComponent<SubDivisionPower>();
         blockSave = null;
         ballColor = GetComponent<SpriteRenderer>();
         currentDirection = Vector3.down;
@@ -29,10 +31,12 @@ public class BalleCloneScript : MonoBehaviour
     {
 
         Move();
+        VerifcationPosition();
         Debug.Log(blockSave);
         timeToDeath -= Time.deltaTime;
         if (timeToDeath < 0)
         {
+            subDivisionPower.allBalle .Remove(gameObject);
             Destroy(gameObject);
         }
     }
@@ -57,7 +61,7 @@ public class BalleCloneScript : MonoBehaviour
 
             if (blockSave == null)
             {
-                ballColor.color = Color.white;
+                ballColor.color = Color.magenta;
                 ballSpeed = 3;
             }
 
@@ -70,6 +74,7 @@ public class BalleCloneScript : MonoBehaviour
         }
         else if (collision.CompareTag("Block"))
         {
+            BlockManager.instance.blockRemaining--;
             //récupérer le bloc toucher et le sauvegarder pour savoir quelle bloc a été toucher
             blockSave = collision.gameObject;
             if (blockSave == null)
@@ -102,15 +107,20 @@ public class BalleCloneScript : MonoBehaviour
                 GameManager.instance.LooseLifeSave(blockSave);
                 blockSave = null;
                 ballSpeed = 3;
-                ballColor.color = Color.white;
+                ballColor.color = Color.magenta;
             }
-            Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
+            else
+            {
+
+                GameManager.instance.LooseLife();
+            }
+                Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
         else if (collision.gameObject.CompareTag("barriere"))
         {
             blockSave = null;
-            ballColor.color = Color.white;
+            ballColor.color = Color.magenta;
             ballSpeed = 3;
             float x = transform.position.x - collision.transform.position.x;
             float length = collision.bounds.size.x;
@@ -123,7 +133,7 @@ public class BalleCloneScript : MonoBehaviour
         {
             if (blockSave == null)
             {
-                ballColor.color = Color.white;
+                ballColor.color = Color.magenta;
                 ballSpeed = 3;
             }
 
@@ -131,5 +141,16 @@ public class BalleCloneScript : MonoBehaviour
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
 
+    }
+
+
+
+    private void VerifcationPosition()
+    {
+        if ((transform.position.x > 9.5 || transform.position.x < -9.5) ||  (transform.position.y > 5.5 || transform.position.y < -4.5f))
+        {
+            subDivisionPower.allBalle.Remove(gameObject);
+            Destroy(gameObject);
+        }
     }
 }

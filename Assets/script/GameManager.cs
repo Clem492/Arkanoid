@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,8 +11,18 @@ public class GameManager : MonoBehaviour
     private int maxLife = 500;
     public int money = 0;
 
+    public int Level = 1;
+
     [SerializeField] private TextMeshProUGUI textMoney;
     [SerializeField] private TextMeshProUGUI textLife;
+    [SerializeField] private TextMeshProUGUI textLevel;
+
+    [SerializeField] private GameObject balle;
+    private GameObject[] BriqueToDestroy;
+    private GameObject[] BalleToDestroy;
+
+    public bool newLevel = false;
+    public bool isPaused = false;
 
     void Start()
     {
@@ -25,12 +37,13 @@ public class GameManager : MonoBehaviour
 
         ShowMoney();
         textLife.text = life.ToString() + "/500";
+        textLevel.text ="Level : " + Level.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        NextLevel();
     }
 
     public void IncreaseSpeed(GameObject collision, ref int balleSpeed)
@@ -90,6 +103,46 @@ public class GameManager : MonoBehaviour
             Debug.Log("aucun type de bloc trouver");
         }
 
+    }
+
+    private void NextLevel()
+    {
+        if (BlockManager.instance.blockRemaining <= 0 && !newLevel)
+        {
+            newLevel = true;
+            money = 0;
+            IncreaseLevel();
+            StartCoroutine(NewLevel());
+            return;
+        }
+    }
+
+    public void IncreaseLevel()
+    {
+        Level++;
+        textLevel.text = "Level : " + Level.ToString();
+    }
+
+    public IEnumerator NewLevel()
+    {
+        isPaused = true;
+        balle.transform.position = new Vector3(0,0,0);
+        //détruire les blocs déja existant mais désactiver
+        BriqueToDestroy = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject go in BriqueToDestroy)
+        {
+            Destroy(go);
+        }
+        //detruire les balle de trop
+        BalleToDestroy = GameObject.FindGameObjectsWithTag("BalleClone");
+        foreach(GameObject go in BalleToDestroy)
+        {
+            Destroy(go);
+        }
+        //faire spawn les nouvelle brique 
+        BlockManager.instance.SpawnBlock();
+        yield return new WaitForSeconds(5);
+        isPaused = false;   
     }
 
 

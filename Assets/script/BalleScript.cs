@@ -31,14 +31,17 @@ public class BalleScript : MonoBehaviour
     {
 
         Move();
-
+        NewLevel();
 
     }
 
 
     private void Move()
     {
-
+        if (GameManager.instance.newLevel)
+        {
+            currentDirection = Vector3.zero;
+        }
         transform.Translate(currentDirection * Time.deltaTime * ballSpeed);
 
 
@@ -68,6 +71,7 @@ public class BalleScript : MonoBehaviour
         }
         else if (collision.CompareTag("Block"))
         {
+            BlockManager.instance.blockRemaining--;
             //récupérer le bloc toucher et le sauvegarder pour savoir quelle bloc a été toucher
             blockSave = collision.gameObject;
             if (blockSave == null)
@@ -131,6 +135,14 @@ public class BalleScript : MonoBehaviour
 
     }
 
-
+    private void NewLevel()
+    {
+        if (!GameManager.instance.isPaused && GameManager.instance.newLevel)
+        {
+            currentDirection = Vector3.down;
+            GameManager.instance.newLevel = false;
+            return;
+        }
+    }
 
 }

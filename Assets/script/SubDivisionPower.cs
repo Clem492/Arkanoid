@@ -4,9 +4,9 @@ using UnityEngine;
 public class SubDivisionPower : MonoBehaviour
 {
     [SerializeField] private GameObject ballePrefab;
-    private List<GameObject> allBalle;
+    public List<GameObject> allBalle;
     private int allballeSize;
-
+    [SerializeField] private int MoneyRequiredToSubDivision;
 
 
 
@@ -35,16 +35,23 @@ public class SubDivisionPower : MonoBehaviour
 
     private void SubDivision()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (GameManager.instance.money >= MoneyRequiredToSubDivision)
         {
-            allballeSize = allBalle.Count;
-            GameManager.instance.AddLife();
-            for (int i = 0; i < allballeSize; i++)
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                GameObject newBalle = Instantiate(ballePrefab, allBalle[i].transform.position, Quaternion.Euler(0, 0, 0));
-                allBalle.Add(newBalle);
+                allballeSize = allBalle.Count;
+                GameManager.instance.money -= MoneyRequiredToSubDivision;
+                GameManager.instance.ShowMoney();
+                GameManager.instance.AddLife();
+                for (int i = 0; i < allballeSize; i++)
+                {
+                    GameObject newBalle = Instantiate(ballePrefab, allBalle[i].transform.position, Quaternion.Euler(0, 0, 0));
+                    allBalle.Add(newBalle);
 
+                }
             }
         }
+
+       
     }
 }

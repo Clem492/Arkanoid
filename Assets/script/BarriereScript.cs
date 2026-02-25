@@ -25,7 +25,7 @@ public class BarriereScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Balle"))
+        if (collision.CompareTag("Balle") || collision.CompareTag("BalleClone"))
         {
             barriereLife--;
             ShowLife();

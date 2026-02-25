@@ -10,7 +10,7 @@ public class BlockManager : MonoBehaviour
 
     public Vector2 startPosition = new Vector2(-6.5f, 7.5f);
     public GameObject[] blocPrefab;
-    private int blockRemaining;
+    public int blockRemaining;
 
     private GameObject[,] tabBlock;
 
@@ -42,7 +42,7 @@ public class BlockManager : MonoBehaviour
     }
 
 
-    private void SpawnBlock()
+    public void SpawnBlock()
     {
         tabBlock = new GameObject[rows, cols];
         for (int row = 0; row < rows; row++)
@@ -83,9 +83,10 @@ public class BlockManager : MonoBehaviour
 
 
                 tabBlock[row, col].transform.position = new Vector3(xPos, yPos, 0);
-                blockRemaining++;
+                
             }
         }
+        blockRemaining = tabBlock.Length;
     }
 
 

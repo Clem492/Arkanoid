@@ -9,6 +9,8 @@ TagManager:
   - lifeBlock
   - floor
   - barriere
+  - GameManager
+  - BalleClone
   layers:
   - Default
   - TransparentFX
