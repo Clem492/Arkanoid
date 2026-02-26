@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public int Level = 1;
 
     [SerializeField] private TextMeshProUGUI textMoney;
+    [SerializeField] private TextMeshProUGUI textMoneyAmelioration;
     [SerializeField] private TextMeshProUGUI textLife;
     [SerializeField] private TextMeshProUGUI textLevel;
 
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float scaleFactorBall;
     [SerializeField] private int lifeFactorRegen;
     [SerializeField] private int lifeFactorBarrier;
+    [SerializeField] private int costFactorAmelioration;
     public bool finishAmelioration = false;
     private void Awake()
     {
@@ -139,7 +141,6 @@ public class GameManager : MonoBehaviour
         if (BlockManager.instance.blockRemaining <= 0 && !newLevel)
         {
             newLevel = true;
-            money = 0;
             IncreaseLevel();
             StartCoroutine(NewLevel());
             return;
@@ -178,6 +179,7 @@ public class GameManager : MonoBehaviour
         //faire l'amélioration
         panelAmelioration.gameObject.SetActive(true);
         PutAmeliorationInPanel();
+        ShowMoney();
         yield return new WaitUntil(() => finishAmelioration);
         finishAmelioration = false;
         panelAmelioration.gameObject.SetActive(false);
@@ -191,6 +193,7 @@ public class GameManager : MonoBehaviour
     public void ShowMoney()
     {
         textMoney.text = money.ToString();
+        textMoneyAmelioration.text = money.ToString();
     }
 
 
@@ -232,6 +235,19 @@ public class GameManager : MonoBehaviour
         return BarriereManager.instance.life;
     }
 
+    public void SkipAmelioraton()
+    {
+        StartCoroutine(CoroutineSkipAmelioration());
+    }
+
+    private IEnumerator CoroutineSkipAmelioration()
+    {
+        finishAmelioration = true;
+        yield return new WaitForSeconds(0.5f);
+        finishAmelioration = false;
+
+    }
+
     public void DoAmelioration(int panelIndex)
     {
         string ameliorationName =
@@ -245,6 +261,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizePaddle();
                     money -= ameliorationDatas[0].listAmeliration[3].cost;
+                    ameliorationDatas[0].listAmeliration[3].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
 
@@ -255,6 +272,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseLifeBarrier();
                     money -= ameliorationDatas[0].listAmeliration[0].cost;
+                    ameliorationDatas[0].listAmeliration[0].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
 
@@ -265,6 +283,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseYourLife();
                     money -= ameliorationDatas[0].listAmeliration[1].cost;
+                    ameliorationDatas[0].listAmeliration[1].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
 
@@ -276,6 +295,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizeBall();
                     money -= ameliorationDatas[0].listAmeliration[4].cost;
+                    ameliorationDatas[0].listAmeliration[4].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
                 break;
@@ -285,6 +305,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizeBarrier();
                     money -= ameliorationDatas[0].listAmeliration[2].cost;
+                    ameliorationDatas[0].listAmeliration[2].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
                 break;
@@ -305,7 +326,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
     //TODO : implémenter le game over
-    //TODO : implémenter le bouton si on as pas d'argent 
     //TODO : Faire le menu
 }
