@@ -43,25 +43,6 @@ public class BarriereManager : MonoBehaviour
 
     }
 
-
-    public void IncreaseScaleX()
-    {
-        //augmenter la taille max
-        if (scale != maxeScale)
-        {
-            scale.x += 0.2f;
-        }
-    }
-
-    public void IncreaseLife()
-    {
-        //augmenter la vie max
-        if (life != maxLife)
-        {
-            life++;
-        }
-    }
-
     private void SpawnBarriere()
     {
         if (Input.GetMouseButtonDown(0))

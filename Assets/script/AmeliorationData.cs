@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 [CreateAssetMenu(fileName = "AmeliorationData", menuName = "Scriptable Objects/AmeliorationData")]
 public class AmeliorationData : ScriptableObject
@@ -10,7 +10,7 @@ public class AmeliorationData : ScriptableObject
     {
         public string name;
         public string description;
-        public Image image;
+        public Sprite sprite;
         public int cost;
     }
 

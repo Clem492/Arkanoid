@@ -15,21 +15,21 @@ MonoBehaviour:
   listAmeliration:
   - name: Barrier life
     description: The more lives you have, the longer you live.
-    image: {fileID: 0}
+    sprite: {fileID: -263690746, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 300
   - name: Regen your life
     description: If you know how to take care of yourself, nothing can stop you.
-    image: {fileID: 0}
+    sprite: {fileID: 2314258606135813140, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 400
   - name: Barrier so long
     description: ' 60 It''s not the size that matters! But it is important.'
-    image: {fileID: 0}
+    sprite: {fileID: 911070093, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 250
-  - name: Padle so long
+  - name: Paddle so long
     description: Do you have a small one? Enlarge it so it becomes more powerful.
-    image: {fileID: 0}
+    sprite: {fileID: 1307470678, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 250
-  - name: Incrediball ball
+  - name: incredible ball
     description: If you only have one ball, it's better if it's big, to compensate
-    image: {fileID: 0}
+    sprite: {fileID: -1296942438, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 320

@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: -4881101651823782295}
   - component: {fileID: 8387212584329294979}
   m_Layer: 0
-  m_Name: barriere
+  m_Name: Barriere
   m_TagString: barriere
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

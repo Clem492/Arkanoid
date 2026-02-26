@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +34,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] RectTransform[] panelAmeliorationType;
     [SerializeField] RectTransform panelAmelioration;
 
+    [SerializeField] private GameObject paddle;
+    [SerializeField] private float scaleFactorPaddel;
+    [SerializeField] private GameObject barrierPrefab;
+    [SerializeField] private float scaleFactorBarrier;
+    [SerializeField] private float scaleFactorBall;
+    [SerializeField] private int lifeFactorRegen;
+    [SerializeField] private int lifeFactorBarrier;
+    public bool finishAmelioration = false;
+    private void Awake()
+    {
+        panelAmelioration.gameObject.SetActive(false);
+        barrierPrefab.transform.localScale = Vector3.one;
+        paddle.transform.localScale = new Vector3(1.5f, 0.3f, 1);
+        balle.transform.localScale = Vector3.one / 2;
+    }
+
     void Start()
     {
         if (instance == null)
@@ -42,17 +60,18 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
 
         ShowMoney();
         textLife.text = life.ToString() + "/500";
-        textLevel.text ="Level : " + Level.ToString();
+        textLevel.text = "Level : " + Level.ToString();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        PutAmeliorationInPanel();
+
         NextLevel();
     }
 
@@ -136,7 +155,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator NewLevel()
     {
         isPaused = true;
-        balle.transform.position = new Vector3(0,0,0);
+        balle.transform.position = new Vector3(0, 0, 0);
         //détruire les blocs déja existant mais désactiver
         BriqueToDestroy = GameObject.FindGameObjectsWithTag("Block");
         foreach (GameObject go in BriqueToDestroy)
@@ -145,7 +164,7 @@ public class GameManager : MonoBehaviour
         }
         //detruire les balle de trop
         BalleToDestroy = GameObject.FindGameObjectsWithTag("BalleClone");
-        foreach(GameObject go in BalleToDestroy)
+        foreach (GameObject go in BalleToDestroy)
         {
             subDivisionPower.allBalle.Clear();
             subDivisionPower.allBalle.Add(GameObject.FindWithTag("Balle"));
@@ -156,10 +175,16 @@ public class GameManager : MonoBehaviour
         {
             Destroy(go);
         }
+        //faire l'amélioration
+        panelAmelioration.gameObject.SetActive(true);
+        PutAmeliorationInPanel();
+        yield return new WaitUntil(() => finishAmelioration);
+        finishAmelioration = false;
+        panelAmelioration.gameObject.SetActive(false);
         //faire spawn les nouvelle brique 
         BlockManager.instance.SpawnBlock();
         yield return new WaitForSeconds(5);
-        isPaused = false;   
+        isPaused = false;
     }
 
 
@@ -170,21 +195,117 @@ public class GameManager : MonoBehaviour
 
 
 
-    //TODO : implémenter le game over
-    //TODO : les amélioration 
-        //la vie des barrière
-        //la vie du regen
-        //la taille des barrièe
-        //la taille du padle
-        //la taille de la balle
+
+
+
+
+    private Vector3 IncreaseSizePaddle()
+    {
+        Vector3 newScale = new Vector3(scaleFactorPaddel, 0, 0);
+        paddle.transform.localScale += newScale;
+        return paddle.transform.localScale;
+    }
+
+    private Vector3 IncreaseSizeBarrier()
+    {
+        Vector3 newScale = new Vector3(scaleFactorBarrier, 0, 0);
+        barrierPrefab.transform.localScale += newScale;
+        return barrierPrefab.transform.localScale;
+    }
+
+    private Vector3 IncreaseSizeBall()
+    {
+        Vector3 newScale = new Vector3(scaleFactorBall, scaleFactorBall, scaleFactorBall);
+        balle.transform.localScale += newScale;
+        return balle.transform.localScale;
+    }
+
+    private int IncreaseYourLife()
+    {
+        increaseLife += lifeFactorRegen;
+        return increaseLife;
+    }
+
+    private int IncreaseLifeBarrier()
+    {
+        BarriereManager.instance.life += lifeFactorBarrier;
+        return BarriereManager.instance.life;
+    }
+
+    public void DoAmelioration(int panelIndex)
+    {
+        string ameliorationName =
+        panelAmeliorationType[panelIndex]
+        .GetComponentsInChildren<TextMeshProUGUI>()[0].text;
+
+        switch (ameliorationName)
+        {
+            case "Paddle so long":
+                if (money >= ameliorationDatas[0].listAmeliration[3].cost)
+                {
+                    IncreaseSizePaddle();
+                    money -= ameliorationDatas[0].listAmeliration[3].cost;
+                    finishAmelioration = true;
+                }
+
+                break;
+
+            case "Barrier life":
+                if (money >= ameliorationDatas[0].listAmeliration[0].cost)
+                {
+                    IncreaseLifeBarrier();
+                    money -= ameliorationDatas[0].listAmeliration[0].cost;
+                    finishAmelioration = true;
+                }
+
+                break;
+
+            case "Regen your life":
+                if (money >= ameliorationDatas[0].listAmeliration[1].cost)
+                {
+                    IncreaseYourLife();
+                    money -= ameliorationDatas[0].listAmeliration[1].cost;
+                    finishAmelioration = true;
+                }
+
+                break;
+
+            case "incredible ball":
+
+                if (money >= ameliorationDatas[0].listAmeliration[4].cost)
+                {
+                    IncreaseSizeBall();
+                    money -= ameliorationDatas[0].listAmeliration[4].cost;
+                    finishAmelioration = true;
+                }
+                break;
+
+            case "Barrier so long":
+                if (money >= ameliorationDatas[0].listAmeliration[2].cost)
+                {
+                    IncreaseSizeBarrier();
+                    money -= ameliorationDatas[0].listAmeliration[2].cost;
+                    finishAmelioration = true;
+                }
+                break;
+        }
+    }
+
+
     private void PutAmeliorationInPanel()
     {
-        
 
         for (int i = 0; i < panelAmeliorationType.Length; i++)
         {
             int random = Random.Range(0, ameliorationDatas[0].listAmeliration.Count);
             panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[0].text = ameliorationDatas[0].listAmeliration[random].name;
+            panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[1].text = ameliorationDatas[0].listAmeliration[random].description;
+            panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[2].text = "Purchase cost : " + ameliorationDatas[0].listAmeliration[random].cost.ToString();
+            panelAmeliorationType[i].GetComponentsInChildren<Image>()[1].sprite = ameliorationDatas[0].listAmeliration[random].sprite;
         }
     }
+
+    //TODO : implémenter le game over
+    //TODO : implémenter le bouton si on as pas d'argent 
+    //TODO : Faire le menu
 }
