@@ -179,9 +179,12 @@ public class GameManager : MonoBehaviour
         //la taille de la balle
     private void PutAmeliorationInPanel()
     {
+        
+
         for (int i = 0; i < panelAmeliorationType.Length; i++)
         {
-            panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[0].text = new string("test");
+            int random = Random.Range(0, ameliorationDatas[0].listAmeliration.Count);
+            panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[0].text = ameliorationDatas[0].listAmeliration[random].name;
         }
     }
 }
