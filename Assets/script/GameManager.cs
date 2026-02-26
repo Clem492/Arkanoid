@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int life = 500;
+    public int increaseLife = 40;
     private int maxLife = 500;
     public int money = 0;
 
@@ -20,11 +21,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject balle;
     private GameObject[] BriqueToDestroy;
     private GameObject[] BalleToDestroy;
+    private GameObject[] BarriereToDestroy;
 
     public bool newLevel = false;
     public bool isPaused = false;
 
     [SerializeField] SubDivisionPower subDivisionPower;
+    //récupération du panel et des donné pour les afficher
+    [SerializeField] List<AmeliorationData> ameliorationDatas;
+    [SerializeField] RectTransform[] panelAmeliorationType;
+    [SerializeField] RectTransform panelAmelioration;
 
     void Start()
     {
@@ -36,6 +42,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
 
         ShowMoney();
         textLife.text = life.ToString() + "/500";
@@ -45,6 +52,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PutAmeliorationInPanel();
         NextLevel();
     }
 
@@ -84,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     public void AddLife()
     {
-        life += 40;
+        life += increaseLife;
         if (life > maxLife)
         {
             life = maxLife;
@@ -112,7 +120,7 @@ public class GameManager : MonoBehaviour
         if (BlockManager.instance.blockRemaining <= 0 && !newLevel)
         {
             newLevel = true;
-           /* money = 0;*/
+            money = 0;
             IncreaseLevel();
             StartCoroutine(NewLevel());
             return;
@@ -143,6 +151,11 @@ public class GameManager : MonoBehaviour
             subDivisionPower.allBalle.Add(GameObject.FindWithTag("Balle"));
             Destroy(go);
         }
+        BarriereToDestroy = GameObject.FindGameObjectsWithTag("barriere");
+        foreach (GameObject go in BarriereToDestroy)
+        {
+            Destroy(go);
+        }
         //faire spawn les nouvelle brique 
         BlockManager.instance.SpawnBlock();
         yield return new WaitForSeconds(5);
@@ -158,5 +171,17 @@ public class GameManager : MonoBehaviour
 
 
     //TODO : implémenter le game over
-    //TODO ! corriger bug de la balle en dehors de la map
+    //TODO : les amélioration 
+        //la vie des barrière
+        //la vie du regen
+        //la taille des barrièe
+        //la taille du padle
+        //la taille de la balle
+    private void PutAmeliorationInPanel()
+    {
+        for (int i = 0; i < panelAmeliorationType.Length; i++)
+        {
+            panelAmeliorationType[i].GetComponentsInChildren<TextMeshProUGUI>()[0].text = new string("test");
+        }
+    }
 }

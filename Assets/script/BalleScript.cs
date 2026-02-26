@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BalleScript : MonoBehaviour
@@ -11,7 +12,7 @@ public class BalleScript : MonoBehaviour
 
     private GameObject blockSave;
 
-
+    private bool horsMap;
 
 
     private void Awake()
@@ -31,8 +32,13 @@ public class BalleScript : MonoBehaviour
     {
 
         Move();
+        if ((transform.position.x > 9.5 || transform.position.x < -9.5) || (transform.position.y > 5.5 || transform.position.y < -4.5f))
+        {
+            horsMap = true;
+        }
+        StartCoroutine(VerifcationPosition());
         NewLevel();
-
+        
     }
 
 
@@ -133,6 +139,20 @@ public class BalleScript : MonoBehaviour
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
 
+    }
+
+    private IEnumerator VerifcationPosition()
+    {
+        if (horsMap)
+        {
+           
+            currentDirection = Vector3.zero;
+            transform.position = Vector3.zero;
+            horsMap = false;
+            yield return new WaitForSeconds(5);
+            currentDirection = Vector3.down;
+        }
+       
     }
 
     private void NewLevel()
