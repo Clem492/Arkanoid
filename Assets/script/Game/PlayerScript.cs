@@ -78,7 +78,10 @@ public class PlayerScript : MonoBehaviour
     void FixedUpdate()
     {
 
-
+        if (GameManager.instance.isPaused)
+        {
+            return;
+        }
         if (Mathf.Approximately(targetSpeed - currentSpeed, 0) && currentState != PlayerState.Idle)
         {
             decelTime = 0f;

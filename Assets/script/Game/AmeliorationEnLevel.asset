@@ -22,7 +22,7 @@ MonoBehaviour:
     sprite: {fileID: 2314258606135813140, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 400
   - name: Barrier so long
-    description: ' 60 It''s not the size that matters! But it is important.'
+    description: ' It''s not the size that matters! But it is important.'
     sprite: {fileID: 911070093, guid: cf73420745469b744845c238ed1ba4be, type: 3}
     cost: 250
   - name: Paddle so long

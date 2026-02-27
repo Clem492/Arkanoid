@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 
 public class GameManager : MonoBehaviour
@@ -44,13 +46,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int lifeFactorBarrier;
     [SerializeField] private int costFactorAmelioration;
     public bool finishAmelioration = false;
-    private void Awake()
-    {
-        panelAmelioration.gameObject.SetActive(false);
-        barrierPrefab.transform.localScale = Vector3.one;
-        paddle.transform.localScale = new Vector3(1.5f, 0.3f, 1);
-        balle.transform.localScale = Vector3.one / 2;
-    }
+    Vector3 paddleStartPos;
+    [SerializeField] private RectTransform gameOverPanel;
+
+    public bool cameraShake;
+
 
     void Start()
     {
@@ -62,7 +62,30 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        paddleStartPos = paddle.transform.position;
+        cameraShake = false;
+        isPaused = false;
+        Level = 1;
+        money = 0;
+        increaseLife = 40;
+        BarriereManager.instance.life = 3;
+        barrierPrefab.transform.localScale = Vector3.one;
+        paddle.transform.localScale = new Vector3(1.5f, 0.3f, 1);
+        balle.transform.localScale = Vector3.one / 2;
+        //Barrier Life
+        ameliorationDatas[0].listAmeliration[0].cost = 300;
+        //Regen your life
+        ameliorationDatas[0].listAmeliration[1].cost = 400;
+        //Barrier so long
+        ameliorationDatas[0].listAmeliration[2].cost = 250;
+        //paddle so long
+        ameliorationDatas[0].listAmeliration[3].cost = 250;
+        //incredible ball
+        ameliorationDatas[0].listAmeliration[4].cost = 320;
 
+
+        panelAmelioration.gameObject.SetActive(false);
+        gameOverPanel.gameObject.SetActive(false);
 
         ShowMoney();
         textLife.text = life.ToString() + "/500";
@@ -75,6 +98,12 @@ public class GameManager : MonoBehaviour
     {
 
         NextLevel();
+        if (life <= 0 && !isPaused)
+        {
+
+            GameOver();
+        }
+
     }
 
     public void IncreaseSpeed(GameObject collision, ref int balleSpeed)
@@ -156,6 +185,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator NewLevel()
     {
         isPaused = true;
+        paddle.transform.position = paddleStartPos;
         balle.transform.position = new Vector3(0, 0, 0);
         //détruire les blocs déja existant mais désactiver
         BriqueToDestroy = GameObject.FindGameObjectsWithTag("Block");
@@ -195,12 +225,6 @@ public class GameManager : MonoBehaviour
         textMoney.text = money.ToString();
         textMoneyAmelioration.text = money.ToString();
     }
-
-
-
-
-
-
 
     private Vector3 IncreaseSizePaddle()
     {
@@ -250,9 +274,8 @@ public class GameManager : MonoBehaviour
 
     public void DoAmelioration(int panelIndex)
     {
-        string ameliorationName =
-        panelAmeliorationType[panelIndex]
-        .GetComponentsInChildren<TextMeshProUGUI>()[0].text;
+        ShowMoney();
+        string ameliorationName = panelAmeliorationType[panelIndex].GetComponentsInChildren<TextMeshProUGUI>()[0].text;
 
         switch (ameliorationName)
         {
@@ -261,6 +284,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizePaddle();
                     money -= ameliorationDatas[0].listAmeliration[3].cost;
+                    ShowMoney();
                     ameliorationDatas[0].listAmeliration[3].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
@@ -272,6 +296,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseLifeBarrier();
                     money -= ameliorationDatas[0].listAmeliration[0].cost;
+                    ShowMoney();
                     ameliorationDatas[0].listAmeliration[0].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
@@ -283,6 +308,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseYourLife();
                     money -= ameliorationDatas[0].listAmeliration[1].cost;
+                    ShowMoney();
                     ameliorationDatas[0].listAmeliration[1].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
@@ -295,6 +321,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizeBall();
                     money -= ameliorationDatas[0].listAmeliration[4].cost;
+                    ShowMoney();
                     ameliorationDatas[0].listAmeliration[4].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
@@ -305,6 +332,7 @@ public class GameManager : MonoBehaviour
                 {
                     IncreaseSizeBarrier();
                     money -= ameliorationDatas[0].listAmeliration[2].cost;
+                    ShowMoney();
                     ameliorationDatas[0].listAmeliration[2].cost += costFactorAmelioration;
                     finishAmelioration = true;
                 }
@@ -326,8 +354,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RestartButton()
+    {
+        SceneManager.LoadScene("Game");
+    }
 
+    private void GameOver()
+    {
+        isPaused = true;
+        gameOverPanel.gameObject.SetActive(true);
+        BriqueToDestroy = GameObject.FindGameObjectsWithTag("Block");
+        foreach (GameObject go in BriqueToDestroy)
+        {
+            Destroy(go);
+        }
+        //detruire les balle de trop
+        BalleToDestroy = GameObject.FindGameObjectsWithTag("BalleClone");
+        foreach (GameObject go in BalleToDestroy)
+        {
+            subDivisionPower.allBalle.Clear();
+            subDivisionPower.allBalle.Add(GameObject.FindWithTag("Balle"));
+            Destroy(go);
+        }
+        BarriereToDestroy = GameObject.FindGameObjectsWithTag("barriere");
+        foreach (GameObject go in BarriereToDestroy)
+        {
+            Destroy(go);
+        }
 
-    //TODO : implémenter le game over
+    }
+
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     //TODO : Faire le menu
 }

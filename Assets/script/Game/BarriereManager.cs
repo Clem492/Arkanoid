@@ -52,13 +52,13 @@ public class BarriereManager : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                 Debug.DrawRay(ray.origin, ray.direction);
-                if (Physics.Raycast(ray, out hit) && ray.origin.y < 0)
+                if (Physics.Raycast(ray, out hit) && ray.origin.y < 0 && ray.origin.y > -4f)
                 {
                     if (hit.transform.CompareTag("floor"))
                     {
                         Instantiate(barrierePrefab, new Vector3(hit.point.x, hit.point.y, 0), Quaternion.identity);
                         GameManager.instance.money -= moneyRequiredToSpawn;
-                        moneyRequiredToSpawn += 50;
+                        moneyRequiredToSpawn += 25;
                         GameManager.instance.ShowMoney();
                     }
 

@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class BalleCloneScript : MonoBehaviour
+public class BalleScript : MonoBehaviour
 {
     [SerializeField] int ballSpeed;
 
@@ -10,12 +11,12 @@ public class BalleCloneScript : MonoBehaviour
     public Vector3 currentDirection;
 
     private GameObject blockSave;
-    [SerializeField] float timeToDeath;
-    private SubDivisionPower subDivisionPower;
 
+    private bool horsMap;
+
+    [SerializeField] CameraShake cameraShake;
     private void Awake()
     {
-        subDivisionPower = GameObject.FindWithTag("GameManager").GetComponent<SubDivisionPower>();
         blockSave = null;
         ballColor = GetComponent<SpriteRenderer>();
         currentDirection = Vector3.down;
@@ -29,22 +30,27 @@ public class BalleCloneScript : MonoBehaviour
 
     void Update()
     {
-
-        Move();
-        VerifcationPosition();
-        Debug.Log(blockSave);
-        timeToDeath -= Time.deltaTime;
-        if (timeToDeath < 0)
+        if (GameManager.instance.isPaused)
         {
-            subDivisionPower.allBalle .Remove(gameObject);
-            Destroy(gameObject);
+            return;
         }
+        Move();
+        if ((transform.position.x > 9.5 || transform.position.x < -9.5) || (transform.position.y > 5.5 || transform.position.y < -4.5f))
+        {
+            horsMap = true;
+        }
+        StartCoroutine(VerifcationPosition());
+        NewLevel();
+        
     }
 
 
     private void Move()
     {
-
+        if (GameManager.instance.newLevel)
+        {
+            currentDirection = Vector3.zero;
+        }
         transform.Translate(currentDirection * Time.deltaTime * ballSpeed);
 
 
@@ -61,7 +67,7 @@ public class BalleCloneScript : MonoBehaviour
 
             if (blockSave == null)
             {
-                ballColor.color = Color.magenta;
+                ballColor.color = Color.white;
                 ballSpeed = 3;
             }
 
@@ -105,22 +111,19 @@ public class BalleCloneScript : MonoBehaviour
             {
                 Debug.Log("entre en collision");
                 GameManager.instance.LooseLifeSave(blockSave);
+                GameManager.instance.cameraShake = true;
+                cameraShake.timer += 0.2f;
                 blockSave = null;
                 ballSpeed = 3;
-                ballColor.color = Color.magenta;
+                ballColor.color = Color.white;
             }
-            else
-            {
-
-                GameManager.instance.LooseLife();
-            }
-                Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
+            Vector2 normal = (new Vector2(transform.position.x, transform.position.y) - collision.ClosestPoint(transform.position)).normalized;
             currentDirection = Vector2.Reflect(currentDirection, normal);
         }
         else if (collision.gameObject.CompareTag("barriere"))
         {
             blockSave = null;
-            ballColor.color = Color.magenta;
+            ballColor.color = Color.white;
             ballSpeed = 3;
             float x = transform.position.x - collision.transform.position.x;
             float length = collision.bounds.size.x;
@@ -133,7 +136,7 @@ public class BalleCloneScript : MonoBehaviour
         {
             if (blockSave == null)
             {
-                ballColor.color = Color.magenta;
+                ballColor.color = Color.white;
                 ballSpeed = 3;
             }
 
@@ -143,14 +146,28 @@ public class BalleCloneScript : MonoBehaviour
 
     }
 
-
-
-    private void VerifcationPosition()
+    private IEnumerator VerifcationPosition()
     {
-        if ((transform.position.x > 9.5 || transform.position.x < -9.5) ||  (transform.position.y > 5.5 || transform.position.y < -4.5f))
+        if (horsMap)
         {
-            subDivisionPower.allBalle.Remove(gameObject);
-            Destroy(gameObject);
+           
+            currentDirection = Vector3.zero;
+            transform.position = Vector3.zero;
+            horsMap = false;
+            yield return new WaitForSeconds(5);
+            currentDirection = Vector3.down;
+        }
+       
+    }
+
+    private void NewLevel()
+    {
+        if (!GameManager.instance.isPaused && GameManager.instance.newLevel)
+        {
+            currentDirection = Vector3.down;
+            GameManager.instance.newLevel = false;
+            return;
         }
     }
+
 }
